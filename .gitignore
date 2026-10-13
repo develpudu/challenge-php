@@ -1,0 +1,11 @@
+# Env
+.env
+
+# Vendor
+api/vendor/
+
+# OS
+.DS_Store
+
+# Logs
+*.log
