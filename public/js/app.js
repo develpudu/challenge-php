@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8080/productos';
+const API_URL = 'http://localhost:8080/api/productos';
 
 const form = document.getElementById('product-form');
 const formTitle = document.getElementById('form-title');

@@ -1,0 +1,21 @@
+{
+    admin off
+}
+
+:80 {
+    root * /app/public
+    php_server
+
+    # Frontend - serve static files
+    handle {
+        try_files {path} /index.html
+    }
+
+    # API routes
+    @api path /api/*
+    handle @api {
+        php_server {
+            root /app/api/public
+        }
+    }
+}

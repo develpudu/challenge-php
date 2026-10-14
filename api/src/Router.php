@@ -49,11 +49,11 @@ final class Router
     {
         $router = new self();
 
-        $router->addRoute('GET', '#^/productos$#', fn() => (new ListProductsAction())());
-        $router->addRoute('GET', '#^/productos/(\d+)$#', fn(int $id) => (new GetProductAction())($id));
-        $router->addRoute('POST', '#^/productos$#', fn() => (new CreateProductAction())());
-        $router->addRoute('PUT', '#^/productos/(\d+)$#', fn(int $id) => (new UpdateProductAction())($id));
-        $router->addRoute('DELETE', '#^/productos/(\d+)$#', fn(int $id) => (new DeleteProductAction())($id));
+        $router->addRoute('GET', '#^/api/productos$#', fn() => (new ListProductsAction())());
+        $router->addRoute('GET', '#^/api/productos/(\d+)$#', fn(int $id) => (new GetProductAction())($id));
+        $router->addRoute('POST', '#^/api/productos$#', fn() => (new CreateProductAction())());
+        $router->addRoute('PUT', '#^/api/productos/(\d+)$#', fn(int $id) => (new UpdateProductAction())($id));
+        $router->addRoute('DELETE', '#^/api/productos/(\d+)$#', fn(int $id) => (new DeleteProductAction())($id));
 
         return $router;
     }

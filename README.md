@@ -1,4 +1,4 @@
-# Challenge PHP - Gestión de Productos
+# Challenge PHP - Gestión de Productos - ADR (Action-Domain-Responder)
 
 API REST en PHP nativo para gestionar productos, conversión ARS→USD, MySQL y frontend en HTML/CSS/JS puro.
 
@@ -6,7 +6,7 @@ API REST en PHP nativo para gestionar productos, conversión ARS→USD, MySQL y 
 
 ## Requisitos
 
-- Docker y Docker Compose instalados
+- Docker y Docker Compose, jq (opcional) instalados 
 - Puertos 8080 y 3306 disponibles
 
 ## Configuración
@@ -55,40 +55,40 @@ Se puede acceder a los endpoints de la API en:
 
 | URL | Método | Endpoint | Qué hace |
 |--------|--------|----------|----------|
-| `http://localhost:8080` | GET | `/productos` | Lista todos los productos |
-| `http://localhost:8080` | GET | `/productos/{id}` | Obtiene un producto por ID |
-| `http://localhost:8080` | POST | `/productos` | Crea un producto |
-| `http://localhost:8080` | PUT | `/productos/{id}` | Modifica un producto |
-| `http://localhost:8080` | DELETE | `/productos/{id}` | Elimina un producto |
+| `http://localhost:8080/api/` | GET | `/productos` | Lista todos los productos |
+| `http://localhost:8080/api/` | GET | `/productos/{id}` | Obtiene un producto por ID |
+| `http://localhost:8080/api/` | POST | `/productos` | Crea un producto |
+| `http://localhost:8080/api/` | PUT | `/productos/{id}` | Modifica un producto |
+| `http://localhost:8080/api/` | DELETE | `/productos/{id}` | Elimina un producto |
 
-## Probar la API
+## Ejemplos para probar la API
 
 ### Nuevo producto
 
 ```bash
-curl -X POST http://localhost:8080/productos \
+curl -sX POST http://localhost:8080/api/productos \
   -H "Content-Type: application/json" \
-  -d '{"nombre": "Producto de prueba", "descripcion": "Este es un producto de prueba desde curl.", "precio": 150000.00}'
+  -d '{"nombre": "Producto de prueba", "descripcion": "Este es un producto de prueba desde curl.", "precio": 150000.00}' | jq .
 ```
 
 ### Listar todos los productos
 
 ```bash
-curl http://localhost:8080/productos
+curl -s http://localhost:8080/api/productos | jq .
 ```
 
 ### Actualizar un producto
 
 ```bash
-curl -X PUT http://localhost:8080/productos/5 \
+curl -sX PUT http://localhost:8080/api/productos/5 \
   -H "Content-Type: application/json" \
-  -d '{"nombre": "Producto de prueba - Actualizado", "descripcion": "Se actualizó el producto desde curl.", "precio": 160000.00}'
+  -d '{"nombre": "Producto de prueba - Actualizado", "descripcion": "Se actualizó el producto desde curl.", "precio": 160000.00}' | jq .
 ```
 
 ### Eliminar producto
 
 ```bash
-curl -X DELETE http://localhost:8080/productos/5
+curl -sX DELETE http://localhost:8080/api/productos/5
 ```
 
 ## Frontend
@@ -107,25 +107,26 @@ El frontend permite:
 ```
 challenge-php/
 ├── api/
-│   ├── Action/
-│   │   ├── CreateProductAction.php
-│   │   ├── DeleteProductAction.php
-│   │   ├── GetProductAction.php
-│   │   ├── ListProductsAction.php
-│   │   └── UpdateProductAction.php
-│   ├── Config/
-│   │   └── Config.php
-│   ├── Database/
-│   │   └── Connection.php
-│   ├── Domain/
-│   │   ├── Product.php
-│   │   └── ProductRepository.php
-│   ├── Responder/
-│   │   └── JsonResponse.php
-│   ├── Router.php
-│   └── public/
+│   ├── src/
+│   │   ├── Action/
+│   │   │   ├── CreateProductAction.php
+│   │   │   ├── DeleteProductAction.php
+│   │   │   ├── GetProductAction.php
+│   │   │   ├── ListProductsAction.php
+│   │   │   └── UpdateProductAction.php
+│   │   ├── Config/
+│   │   │   └── Config.php
+│   │   ├── Database/
+│   │   │   └── Connection.php
+│   │   ├── Domain/
+│   │   │   ├── Product.php
+│   │   │   └── ProductRepository.php
+│   │   ├── Responder/
+│   │   │   └── JsonResponse.php
+│   │   └── Router.php
+│   └── public/               # API document root FrankenPHP php_server
 │       └── index.php
-├── public/
+├── public/                   # Frontend document root FrankenPHP Static
 │   ├── index.html
 │   ├── css/
 │   │   └── styles.css
@@ -133,7 +134,11 @@ challenge-php/
 │       └── app.js
 ├── database/
 │   └── init.sql
+├── docker/                   # FrankenPHP 
+│   ├── Dockerfile
+│   └── Caddyfile
 ├── docker-compose.yml
+├── .dockerignore
 ├── .env.example
 ├── .gitignore
 ├── README.md

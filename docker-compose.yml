@@ -1,13 +1,20 @@
 services:
   api:
-    image: dunglas/frankenphp:1-php8.3
+    build:
+      context: ./api
+      dockerfile: ../docker/Dockerfile
+    container_name: challenge-api
     env_file:
       - path: .env
         required: true
     ports:
       - "8080:80"
     volumes:
-      - ./api:/app
+      - ./api:/app/api
+      - ./public:/app/public
+      - ./docker/Caddyfile:/etc/frankenphp/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
     depends_on:
       db:
         condition: service_healthy
@@ -15,6 +22,7 @@ services:
 
   db:
     image: mysql:8.0
+    container_name: challenge-db
     ports:
       - "3306:3306"
     volumes:
@@ -23,6 +31,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=rootpassword
       - MYSQL_DATABASE=productos
+      - MYSQL_ROOT_HOST=%
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
@@ -32,3 +41,5 @@ services:
 
 volumes:
   mysql_data:
+  caddy_data:
+  caddy_config:

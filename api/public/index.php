@@ -21,7 +21,7 @@ spl_autoload_register(function (string $class) {
     }
 
     $relativeClass = substr($class, strlen($prefix));
-    $file = __DIR__ . '/../' . str_replace('\\', '/', $relativeClass) . '.php';
+    $file = __DIR__ . '/../src/' . str_replace('\\', '/', $relativeClass) . '.php';
 
     if (file_exists($file)) {
         require $file;
@@ -38,5 +38,5 @@ try {
 } catch (\Throwable $e) {
     http_response_code(500);
     header('Content-Type: application/json; charset=utf-8');
-    echo json_encode(['error' => 'Internal server error', $e->getMessage()], JSON_UNESCAPED_UNICODE);
+    echo json_encode(['error' => 'Error internal del server: ', $e->getMessage()], JSON_UNESCAPED_UNICODE);
 }
